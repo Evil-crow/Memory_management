@@ -19,7 +19,7 @@ void list_print(list *process_list);
 
 void list_visit(list *process_list);
 
-list *list_search(list **process_list, int list_process_ID);
+list_node *list_search(list **process_list, int list_process_ID);
 
 void list_delete(list **process_list, int list_process_ID);
 

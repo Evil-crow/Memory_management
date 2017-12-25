@@ -11,7 +11,7 @@ void list_insert(list **process_list, list_node node)
         new_node->data.list_process_size = node.list_process_size;
         new_node->LChild = NULL;
         new_node->RChild = NULL;
-        *process_list = new_node;                                        //�½ڵ�������λ��
+        *process_list = new_node;
         printf("insert OK!\n");
         return;
     }
@@ -22,19 +22,20 @@ void list_insert(list **process_list, list_node node)
         list_insert(&((*process_list)->RChild), node);
 }
 
-list *list_search(list **process_list, int list_process_ID)
+list_node *list_search(list **process_list, int list_process_ID)
 {
     if ((*process_list) == NULL)
         return NULL;
 
-    while ((*process_list) != NULL) {
-        if ((*process_list)->data.list_process_ID == list_process_ID)
-            return (*process_list);
-        else if ((*process_list)->data.list_process_ID < list_process_ID) {
-            (*process_list) = (*process_list)->LChild;
+    list *temp = *process_list;
+    while (temp != NULL) {
+        if (temp->data.list_process_ID == list_process_ID)
+            return &(temp->data);
+        else if (temp->data.list_process_ID > list_process_ID) {
+            temp = temp->LChild;
         }
         else
-            (*process_list) = (*process_list)->RChild;
+            temp = temp->RChild;
     }
 
     return NULL;
@@ -42,12 +43,12 @@ list *list_search(list **process_list, int list_process_ID)
 
 void list_delete(list **process_list, int list_process_ID)
 {
-    int direction;                            // ��������һ������/������
+    int direction;
     list *temp, *prev;
     temp = (*process_list);
 
     prev = temp;
-    while (temp->data.list_process_ID != list_process_ID) {
+    while ((temp != NULL) && (temp->data.list_process_ID != list_process_ID)) {
         prev = temp;
         if (temp->data.list_process_ID == list_process_ID)
             break;
@@ -61,10 +62,16 @@ void list_delete(list **process_list, int list_process_ID)
         }
     }
 
-    if(temp == NULL)
+    if(temp == NULL) {
+        printf("Can't find node!\n");
         return ;
+    }
 
     if ((temp->LChild == NULL) && (temp->RChild == NULL)) {
+        if (prev == temp) {
+            (*process_list) = NULL;
+            return ;
+        }
         if (direction == 0)
             prev->LChild = NULL;
         else
@@ -100,7 +107,7 @@ void list_delete(list **process_list, int list_process_ID)
             free(temp);
         }
     }
-    else {                                              // ���µ������ǣ���/������������
+    else {
         list *pre_prev;
         pre_prev = temp->RChild;
 
