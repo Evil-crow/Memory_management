@@ -1,7 +1,24 @@
+/*
+ * 文件名: block_node.c
+ * 功能: 内存区块链的轮子
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "block_node.h"
-
+/*
+ * 采用冒泡法进行链表排序
+ *
+ * 带有头指针的链表排序
+ *
+ * 按照地址升序进行排序
+ *
+ * 下面几个函数照葫芦画瓢,同理
+ *
+ * TODO: 改成按照qsort( )的实现方式
+ *
+ * qsort(void *__base, size_t __nmemb, size_t __size, __compar_fn_t __compar);
+ *
+ */
 void bubble_sort_ascending_address(Node *block)
 {
     block_node *temp, *cur, *loop;
@@ -11,9 +28,9 @@ void bubble_sort_ascending_address(Node *block)
         exit(0);
     }
 
-    for(int i = 0; i < block->node_num; i++) {
-        for(temp = block->head; temp->next->next != NULL; temp = temp->next) {
-            if(temp->next->block_address > temp->next->next->block_address) {
+    for(int i = 0; i < block->node_num; i++) {                                  // 第一层趟数循环
+        for(temp = block->head; temp->next->next != NULL; temp = temp->next) {  // 第二层两两交换
+            if(temp->next->block_address > temp->next->next->block_address) {   // 以地址升序为基准
                 cur = temp->next;
                 loop = temp->next->next;
                 cur->next = loop->next;
@@ -35,7 +52,7 @@ void bubble_sort_ascending_size(Node *block)
 
     for(int i = 0; i < block->node_num; i++) {
         for(temp = block->head; temp->next->next != NULL; temp = temp->next) {
-            if(temp->next->block_size > temp->next->next->block_size) {
+            if(temp->next->block_size > temp->next->next->block_size) {         // 以区块大小为基准升序
                 cur = temp->next;
                 loop = temp->next->next;
                 cur->next = loop->next;
@@ -57,7 +74,7 @@ void bubble_sort_descending_address(Node *block)
 
     for(int i = 0; i < block->node_num; i++) {
         for(temp = block->head; temp->next->next != NULL; temp = temp->next) {
-            if(temp->next->block_address < temp->next->next->block_address) {
+            if(temp->next->block_address < temp->next->next->block_address) {   // 以地址为基准降序
                 cur = temp->next;
                 loop = temp->next->next;
                 cur->next = loop->next;
@@ -79,7 +96,7 @@ void bubble_sort_descending_size(Node *block)
 
     for(int i = 0; i < block->node_num; i++) {
         for(temp = block->head; temp->next->next != NULL; temp = temp->next) {
-            if(temp->next->block_size < temp->next->next->block_size) {
+            if(temp->next->block_size < temp->next->next->block_size) {         // 以区块大小为基准降序
                 cur = temp->next;
                 loop = temp->next->next;
                 cur->next = loop->next;
@@ -93,14 +110,20 @@ void bubble_sort_descending_size(Node *block)
 Node *init_block(void)
 {
     Node *block;
-    int initial_address;
-    int initial_size;
-    int initial_arithmetic;
-    int next_address;
-    block = (Node *)malloc(sizeof(Node));
+    int initial_address;                   // 初始化地址
+    int initial_size;                      // 初始化区块大小
+    int initial_arithmetic;                // 区块大小间隔
+    int next_address;                      // 计算下一个区块地址
+    block = (Node *)malloc(sizeof(Node));                          // 进行区块链的初始化
     block->head = (block_node *)malloc(sizeof(block_node));
     block->head->next = NULL;
 
+    /*
+     * 录入区块链信息:
+     *
+     * 起始地址, 首区块大小, 区块编号, 区块大小等差
+     *
+     */
     printf("Please input Initialize the first address: ");
     scanf("%d",&initial_address);
     printf("Please input Initialize the first block_size: ");
@@ -124,7 +147,7 @@ Node *init_block(void)
         block->head->next = pNew;
     }
 
-    reverse(block);
+    reverse(block);                                            /* 链表逆置为升序 , 后期看来是多余的操作,有各种排序函数调用*/
     return block;
 }
 
@@ -145,23 +168,23 @@ void reverse(Node *block)
 
 void block_print(Node *block)
 {
-    if (block == NULL) {
+    if (block == NULL) {                                     // 区块链为空,异常
         printf("The block is NULL!\n");
         return ;
     }
     block_node *temp = block->head->next;
-    bubble_sort_ascending_address(block);
+    bubble_sort_ascending_address(block);                    // 按地址,进行升序排序
 
-    if (temp == NULL) {
+    if (temp == NULL) {                                      // 异常处理
         printf("The block is NULL!\n");
         return ;
     }
     printf("------------------------\n");
     printf("|BLOCK_ARESS|BLOCK_SIZE|\n");
     printf("------------------------\n");
-    while (temp) {
+    while (temp) {                                           // 格式化打印所有区块链信息
         printf("|%11d|%10d|\n",temp->block_address, temp->block_size);
         printf("------------------------\n");
-        temp = temp->next;
     }
+        temp = temp->next;
 }

@@ -1,3 +1,7 @@
+/*
+ * 文件名: memory_recovery.h
+ * 功能: 内存回收的函数原型
+ */
 #ifndef _MEMORY_RECOVERY_H
 #define _MEMORY_RECOVERY_H
 #include "list_node.h"

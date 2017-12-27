@@ -1,9 +1,14 @@
+/*
+ * 文件名: memory_recovery.c
+ * 功能: 内存回收函数实现
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include "list_node.h"
 #include "block_node.h"
 #include "memory_recovery.h"
 
+/* define 符号常量,提高可读性 */
 #define FRONT 1
 #define BACK 2
 #define MIDDLE 3
@@ -55,25 +60,29 @@ void memory_recovery(list **process_list, Node **block)
 
 int memory_recovery_judge(list_node *list_node, block_node *block_node, int process_ID)
 {
+    /* 若回收块在 两个区块F1,F2 之间则为MIDDLE */
     if ((block_node->block_address + block_node->block_size == list_node->list_block_address)
         && (block_node->next->block_address == list_node->list_block_address + list_node->list_process_size))
         return MIDDLE;
+    /* 若前一个区块邻接,则为FRONT */
     else if (block_node->block_address + block_node->block_size == list_node->list_block_address)
         return FRONT;
+    /* 若与后一个区块邻接,则为BACK */
     else if (block_node->next->block_address == list_node->list_block_address + list_node->list_process_size)
         return BACK;
+    /* 此外,即为不邻接情况 */
     else
         return NONE;
 }
 
-list_node *get_list_node(list *process_list, int process_ID)
+list_node *get_list_node(list *process_list, int process_ID)  /* 获取二叉树中目标节点 */
 {
     list_node *temp;
     temp = list_search(&process_list, process_ID);
     return temp;
 }
 
-block_node *get_block_node(Node *block, list_node *list_node)
+block_node *get_block_node(Node *block, list_node *list_node)  /* 获取区块链中的目标节点,前一个 */
 {
     block_node *temp, *prev;
 
@@ -94,7 +103,7 @@ block_node *get_block_node(Node *block, list_node *list_node)
     return NULL;
 }
 
-int get_process_ID(void)
+int get_process_ID(void) /* 获取进程ID */
 {
     int process_ID;
 
