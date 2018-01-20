@@ -185,6 +185,6 @@ void block_print(Node *block)
     while (temp) {                                           // 格式化打印所有区块链信息
         printf("|%11d|%10d|\n",temp->block_address, temp->block_size);
         printf("------------------------\n");
-    }
         temp = temp->next;
+    }
 }
