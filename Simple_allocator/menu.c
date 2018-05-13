@@ -17,7 +17,42 @@ list *process_list = NULL;              // lowB操作,全局的二叉树根,为�
 
 block_node *temp;                       // lowB操作,记录上次分配操作节点
 
-void submenu(void);
+void submenu(void)
+{
+    int choice;
+    char character;
+
+    while(1) {
+        printf("-------------Memory Submenu-------------\n\n");
+        printf("            1.First fit\n\n");
+        printf("            2.Best fit\n\n");
+        printf("            3.Worst fit\n\n");
+        printf("            4.Next fit\n\n");
+        printf("            5.Exit\n\n");
+        printf("-----------------------------------------\n\n");
+        printf("Please input your choice: ");
+        scanf("%d",&choice);
+        getchar( );
+        printf("Press [Enter] to continue. . .\n");
+        if (scanf("%c",&character) == 1) {
+            system("clear");
+        }
+        switch(choice) {
+            case 1: temp = memory_first_fit(&block, &process_list); break;
+            case 2: temp = memory_best_fit(&block, &process_list); break;
+            case 3: temp = memory_worst_fit(&block, &process_list); break;
+            case 4: temp = memory_next_fit(&block, &temp, &process_list); break;
+            case 5: return;
+            default: break;
+        }
+        getchar( );
+        printf("Press [Enter] to continue. . .\n");
+        if (scanf("%c",&character) == 1) {
+            system("clear");
+        }
+    }
+}
+
 
 void menu(void)
 {
@@ -66,42 +101,6 @@ void menu(void)
                 break;
             default:
                 break;
-        }
-        getchar( );
-        printf("Press [Enter] to continue. . .\n");
-        if (scanf("%c",&character) == 1) {
-            system("clear");
-        }
-    }
-}
-
-void submenu(void)
-{
-    int choice;
-    char character;
-
-    while(1) {
-        printf("-------------Memory Submenu-------------\n\n");
-        printf("            1.First fit\n\n");
-        printf("            2.Best fit\n\n");
-        printf("            3.Worst fit\n\n");
-        printf("            4.Next fit\n\n");
-        printf("            5.Exit\n\n");
-        printf("-----------------------------------------\n\n");
-        printf("Please input your choice: ");
-        scanf("%d",&choice);
-        getchar( );
-        printf("Press [Enter] to continue. . .\n");
-        if (scanf("%c",&character) == 1) {
-            system("clear");
-        }
-        switch(choice) {
-            case 1: temp = memory_first_fit(&block, &process_list); break;
-            case 2: temp = memory_best_fit(&block, &process_list); break;
-            case 3: temp = memory_worst_fit(&block, &process_list); break;
-            case 4: temp = memory_next_fit(&block, &temp, &process_list); break;
-            case 5: return;
-            default: break;
         }
         getchar( );
         printf("Press [Enter] to continue. . .\n");
