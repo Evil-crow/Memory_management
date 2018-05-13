@@ -4,6 +4,7 @@
  */
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "block_node.h"
 /*
  * 采用冒泡法进行链表排序
@@ -19,92 +20,49 @@
  * qsort(void *__base, size_t __nmemb, size_t __size, __compar_fn_t __compar);
  *
  */
-void bubble_sort_ascending_address(Node *block)
-{
-    block_node *temp, *cur, *loop;
-    temp = block->head;
-    if(temp->next == NULL) {
-        printf("Error,the block is NULL!\n");
-        exit(0);
-    }
 
-    for(int i = 0; i < block->node_num; i++) {                                  // 第一层趟数循环
-        for(temp = block->head; temp->next->next != NULL; temp = temp->next) {  // 第二层两两交换
-            if(temp->next->block_address > temp->next->next->block_address) {   // 以地址升序为基准
-                cur = temp->next;
-                loop = temp->next->next;
-                cur->next = loop->next;
-                temp->next = loop;
-                loop->next = cur;
-            }
-        }
-    }
+void exchange(block_node **temp, block_node **cur, block_node **loop)
+{
+    *cur = (*temp)->next;
+    *loop = (*temp)->next->next;
+    (*cur)->next = (*loop)->next;
+    (*temp)->next = *loop;
+    (*loop)->next = *cur;
 }
 
-void bubble_sort_ascending_size(Node *block)
+void bubble_sort(Node *block, bool (*compare)(block_node *, block_node *))
 {
     block_node *temp, *cur, *loop;
     temp = block->head;
-    if(temp->next == NULL) {
+    if (temp->next == NULL) {
         printf("Error,the block is NULL!\n");
-        exit(0);
+        return ;
     }
 
-    for(int i = 0; i < block->node_num; i++) {
-        for(temp = block->head; temp->next->next != NULL; temp = temp->next) {
-            if(temp->next->block_size > temp->next->next->block_size) {         // 以区块大小为基准升序
-                cur = temp->next;
-                loop = temp->next->next;
-                cur->next = loop->next;
-                temp->next = loop;
-                loop->next = cur;
-            }
-        }
-    }
+    for (int i = 0; i < block->node_num; ++i)
+        for (temp = block->head; temp->next->next != NULL; temp = temp->next)
+            if (compare(temp->next, temp->next->next))
+                exchange(&temp, &cur, &loop);
 }
 
-void bubble_sort_descending_address(Node *block)
+bool address_ascend(block_node *a, block_node *b)
 {
-    block_node *temp, *cur, *loop;
-    temp = block->head;
-    if(temp->next == NULL) {
-        printf("Error,the block is NULL!\n");
-        exit(0);
-    }
-
-    for(int i = 0; i < block->node_num; i++) {
-        for(temp = block->head; temp->next->next != NULL; temp = temp->next) {
-            if(temp->next->block_address < temp->next->next->block_address) {   // 以地址为基准降序
-                cur = temp->next;
-                loop = temp->next->next;
-                cur->next = loop->next;
-                temp->next = loop;
-                loop->next = cur;
-            }
-        }
-    }
+    return a->block_address > b->block_address ? true : false;
 }
 
-void bubble_sort_descending_size(Node *block)
+bool address_descend(block_node *a, block_node *b)
 {
-    block_node *temp, *cur, *loop;
-    temp = block->head;
-    if(temp->next == NULL) {
-        printf("Error,the block is NULL!\n");
-        exit(0);
-    }
+    return a->block_address < b->block_address ? true : false;
+}
 
-    for(int i = 0; i < block->node_num; i++) {
-        for(temp = block->head; temp->next->next != NULL; temp = temp->next) {
-            if(temp->next->block_size < temp->next->next->block_size) {         // 以区块大小为基准降序
-                cur = temp->next;
-                loop = temp->next->next;
-                cur->next = loop->next;
-                temp->next = loop;
-                loop->next = cur;
-            }
-        }
-    }
+bool size_ascend(block_node *a, block_node *b)
+{
+    return a->block_size > b->block_size ? true : false;
+}
+
+bool size_descend(block_node *a, block_node *b)
+{
+    return a->block_size < b->block_size ? true : false;
 }
 
 Node *init_block(void)
@@ -172,8 +130,8 @@ void block_print(Node *block)
         printf("The block is NULL!\n");
         return ;
     }
-    block_node *temp = block->head->next;
-    bubble_sort_ascending_address(block);                    // 按地址,进行升序排序
+    block_node *temp = block->head->next;                   
+    bubble_sort(block, address_ascend);                      // 按地址,进行升序排序
 
     if (temp == NULL) {                                      // 异常处理
         printf("The block is NULL!\n");
