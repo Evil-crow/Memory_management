@@ -23,8 +23,8 @@ list_node get_information(void)       // 获取process相关信息,进程ID,以�
 block_node *memory_first_fit(Node **block, list **process_list)       // first_fit算法实现
 {
     list_node process_node = get_information( );
-    block_node *temp, *prev;
-    bubble_sort_ascending_address(*block);                            // 前提: 区块链按照地址升序排序
+    block_node *temp, *prev;                           
+    bubble_sort(*block, address_ascend);                             // 前提: 区块链按照地址升序排序
     prev = temp =  (*block)->head->next;
 
     if (temp == NULL) {
@@ -66,8 +66,8 @@ block_node *memory_first_fit(Node **block, list **process_list)       // first_f
 block_node *memory_best_fit(Node **block, list **process_list)       // best-fit算法的实现
 {
     list_node process_node = get_information( );
-    block_node *temp, *prev;
-    bubble_sort_ascending_size(*block);                              // 按照区块大小的升序排列
+    block_node *temp, *prev;                             
+    bubble_sort(*block, size_ascend);                                // 按照区块大小的升序排列
     prev = temp = (*block)->head->next;
 
     if (temp == NULL) {
@@ -109,8 +109,8 @@ block_node *memory_best_fit(Node **block, list **process_list)       // best-fit
 block_node *memory_worst_fit(Node **block, list **process_list)    // 算法worst-fit算法实现
 {
     list_node process_node = get_information( );
-    block_node *temp, *prev;
-    bubble_sort_descending_size(*block);                           // 按照内存区块大小的降序排列
+    block_node *temp, *prev;                          
+    bubble_sort(*block, size_descend);                             // 按照内存区块大小的降序排列
     prev = temp = (*block)->head->next;
 
     if (temp == NULL) {
@@ -154,8 +154,8 @@ block_node *memory_worst_fit(Node **block, list **process_list)    // 算法wors
 block_node *memory_next_fit(Node **block_head, block_node **block, list **process_list)
 {
     list_node process_node = get_information( );
-    block_node *temp, *prev;
-    bubble_sort_ascending_address(*block_head);         // next-fit与first-fit类似,仅是从上次操作后的节点出发,也是地址升序
+    block_node *temp, *prev;        
+    bubble_sort(*block_head, address_ascend);                 // next-fit与first-fit类似,仅是从上次操作后的节点出发,也是地址升序
     prev = temp = (*block);
 
     while(temp) {                                       // 先顺序查找到 链表尾
