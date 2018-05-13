@@ -79,6 +79,10 @@ list_node *get_list_node(list *process_list, int process_ID)  /* 获取二叉树
 {
     list_node *temp;
     temp = list_search(&process_list, process_ID);
+    if (temp == NULL) {
+        printf("No process! Error!\n");
+        exit(EXIT_FAILURE);
+    }
     return temp;
 }
 
@@ -86,7 +90,7 @@ block_node *get_block_node(Node *block, list_node *list_node)  /* 获取区块�
 {
     block_node *temp, *prev;
 
-    bubble_sort_ascending_address(block);
+    bubble_sort(block, address_ascend);
     prev = temp = block->head->next;
     if (temp == NULL) {
         printf("Error, no block node!\n");
