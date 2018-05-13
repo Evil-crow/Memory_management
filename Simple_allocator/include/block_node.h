@@ -5,6 +5,7 @@
 
 #ifndef _BLOCK_NODE_H
 #define _BLOCK_NODE_H
+#include <stdbool.h>
 
 /* 区块链中单个节点 */
 typedef struct node {
@@ -27,17 +28,17 @@ void reverse(Node *block);
 
 /* 冒泡排序的函数原型 */
 
-/* 地址升序排序 */
-void bubble_sort_ascending_address(Node *block);
+void bubble_sort(Node *block, bool (*compare)(block_node *, block_node *));
 
-/* 大小升序排序 */
-void bubble_sort_ascending_size(Node *block);
+void exchange(block_node **temp, block_node **cur, block_node **loop);
 
-/* 地址降序排序 */
-void bubble_sort_descending_address(Node *block);
+bool address_ascend(block_node *, block_node *);
 
-/* 大小降序排序 */
-void bubble_sort_descending_size(Node *block);
+bool address_descend(block_node *, block_node *);
+
+bool size_ascend(block_node *, block_node *);
+
+bool size_descend(block_node *, block_node *);
 
 /* 遍历区块链,打印信息函数 */
 void block_print(Node *block);
